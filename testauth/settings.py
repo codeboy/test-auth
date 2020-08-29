@@ -4,8 +4,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
 SECRET_KEY = '20=yb-z!wpx12*%@tbbnbme&85!p-#=9s@g!1uoh0kzpkb%yu!'
-# DEBUG = True
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 INSTALLED_APPS = [
