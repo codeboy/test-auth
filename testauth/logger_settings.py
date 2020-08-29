@@ -16,9 +16,11 @@ LOGGING = {
         },
         'file': {
             'level': 'DEBUG',
-            'class': 'logging.FileHandler',
+            'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'file',
-            'filename': 'debug.log'
+            'filename': 'debug.log',
+            'maxBytes' : 1024*1024*3, # 3mb
+            'backupCount': 3,
         }
     },
     'loggers': {
