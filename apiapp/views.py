@@ -3,16 +3,18 @@ from django.views import View
 from django.conf import settings
 import requests
 import json
+import logging
 
 
+logger = logging.getLogger(__name__)
 api_url = "https://slb.medv.ru/api/v2/"
 
 def print_request(req):
     """
     just log the result of request
-    :param req: request object
+    :param req: requests object
     """
-    print(dir(req))
+    print(req)
     for i in ['headers', 'content', 'reason', 'links']:
         print(getattr(req, i))
     print(req.request.body)
@@ -45,6 +47,7 @@ class AuthCheckView(View):
             # non 200 as 404 or 405
             if stat != 200:
                 ctx = 'Request error: {}'.format(req.status_code)
+                logger.error(ctx)
 
             # handle response errors after 200 code
             # checking for 'result' existing of not handle errors in 'error' or any others
@@ -53,17 +56,21 @@ class AuthCheckView(View):
                 if not 'result' in prepared_data.keys():
                     if prepared_data.get('error'):
                         ctx = 'Server error: {}'.format(prepared_data['error']['message'])
+                        logger.error(ctx)
                     else:
                         ctx = 'Some error acquired'
+                # final ready data
                 else:
                     ctx = prepared_data
 
         # error with certificate or key file
         except requests.exceptions.SSLError as e:
             ctx = 'SSL error'
+            logger.error(ctx)
         # other connection error
         except requests.exceptions.RequestException as e:
             ctx = 'Connection error. {}'.format(e)
+            logger.error(ctx)
 
         session.close()
         return HttpResponse('<html><body><div><pre style="white-space: break-spaces">{}</pre></div></body></html>'.format(ctx))

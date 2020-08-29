@@ -4,8 +4,9 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
 SECRET_KEY = '20=yb-z!wpx12*%@tbbnbme&85!p-#=9s@g!1uoh0kzpkb%yu!'
-DEBUG = True
-ALLOWED_HOSTS = []
+# DEBUG = True
+DEBUG = False
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -48,18 +49,10 @@ TEMPLATES = [
 WSGI_APPLICATION = 'testauth.wsgi.application'
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
 ]
 
 LANGUAGE_CODE = 'en-us'
@@ -71,3 +64,5 @@ STATIC_URL = '/static/'
 
 CERTIFICATE_FILE = "./files/client03test.crt"
 KEY_FILE = "./files/client03test.key"
+
+from .logger_settings import LOGGING
