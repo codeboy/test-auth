@@ -11,6 +11,24 @@ from .api_request import BaseRequest
 logger = logging.getLogger(__name__)
 api_url = "https://slb.medv.ru/api/v2/"
 
+
+class AuthCheckTplView(TemplateView):
+    """
+    This class use template as output
+    and BaseRequest as request engine
+    """
+    template_name = 'api.html'
+
+    def get(self, request, **kwargs):
+        ctx = self.get_context_data()
+        api_method = "auth.check"
+        api_req = BaseRequest(api_url)
+        result = api_req.make_request(method=api_method)
+
+        ctx['data'] = result
+        return self.render_to_response(ctx)
+
+
 def print_request(req):
     """
     just log the result of request
@@ -75,20 +93,3 @@ class AuthCheckView(View):
 
         session.close()
         return HttpResponse('<html><body><div><pre style="white-space: break-spaces">{}</pre></div></body></html>'.format(ctx))
-
-
-class AuthCheckTplView(TemplateView):
-    """
-    This class use template as output
-    and BaseRequest as request engine
-    """
-    template_name = 'api.html'
-
-    def get(self, request, **kwargs):
-        ctx = self.get_context_data()
-        api_method = "auth.check"
-        api_req = BaseRequest(api_url)
-        result = api_req.make_request(method=api_method)
-
-        ctx['data'] = result
-        return self.render_to_response(ctx)
