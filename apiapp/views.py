@@ -1,9 +1,11 @@
 from django.http import HttpResponse
 from django.views import View
+from django.views.generic.base import TemplateView
 from django.conf import settings
 import requests
 import json
 import logging
+from .api_request import BaseRequest
 
 
 logger = logging.getLogger(__name__)
@@ -40,7 +42,6 @@ class AuthCheckView(View):
 
         try:
             req = session.post(url, data=json.dumps(send_data))
-            # print_request(req) # just print result of request
             stat = req.status_code
 
             # while request we need handle some errors
@@ -74,3 +75,20 @@ class AuthCheckView(View):
 
         session.close()
         return HttpResponse('<html><body><div><pre style="white-space: break-spaces">{}</pre></div></body></html>'.format(ctx))
+
+
+class AuthCheckTplView(TemplateView):
+    """
+    This class use template as output
+    and BaseRequest as request engine
+    """
+    template_name = 'api.html'
+
+    def get(self, request, **kwargs):
+        ctx = self.get_context_data()
+        api_method = "auth.check"
+        api_req = BaseRequest(api_url)
+        result = api_req.make_request(method=api_method)
+
+        ctx['data'] = result
+        return self.render_to_response(ctx)
